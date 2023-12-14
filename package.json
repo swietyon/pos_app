@@ -3,10 +3,21 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
+  },
+  "serve": {
+    "builder": "@angular-devkit/build-angular:dev-server",
+    "options": {
+      "browserTarget": "your-app:build",
+      "proxyConfig": "proxy.conf.json"
+    },
+    "configurations": {
+      "production": {
+      }
+    }
   },
   "private": true,
   "dependencies": {
