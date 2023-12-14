@@ -10,6 +10,8 @@ import { Subscriber, Subscription } from 'rxjs';
 export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   proofOfSpaceResults: { [userId: string]: any } = {};
   proofOfSpaceSubscription!: Subscription;
+  awaitingProofOfSpace: { [userId: string]: boolean } = {};
+
 
   // Przykładowe dane użytkowników
   users = [
@@ -33,6 +35,9 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   }
 
   generateProofOfSpace(user: any) {
+    // Oznacz, że oczekujemy na dane dla danego użytkownika
+    this.awaitingProofOfSpace[user.id] = true;
+  
     this.proofOfSpaceSubscription = this.proofOfSpaceService.generateProofOfSpace(user.id, user.spaceSize, user.timeSpent).subscribe({
       next: (result) => {
         this.proofOfSpaceResults[user.id] = result.data;
@@ -40,11 +45,13 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error generating Proof of Space:', error);
+        // Zaktualizuj informację o oczekiwaniu w przypadku błędu po 0.5 sekundy
         // Dodaj kod do obsługi błędów, np. wyświetlanie komunikatu użytkownikowi
       }
     });
-  }
 
+  }
+  
   ngOnDestroy() {
     // W przypadku komponentu, zawsze pamiętaj o odsubskrybowaniu, aby uniknąć wycieków pamięci
     this.proofOfSpaceSubscription.unsubscribe();

@@ -1,10 +1,34 @@
 <div *ngFor="let user of users">
-    <h2>Proof of Space Generator for {{ user.name }}</h2>
-    <button (click)="generateProofOfSpace(user)">Generate Proof of Space</button>
-    <div class="result-container" *ngIf="proofOfSpaceResults[user.id]">
-      <p class="reward-info" [ngClass]="{ 'reward-success': proofOfSpaceResults[user.id].success, 'reward-failure': !proofOfSpaceResults[user.id].success }">
-        Reward Status: {{ proofOfSpaceResults[user.id].success ? 'Reward Obtained' : 'Reward Not Obtained' }}
-      </p>
-      <!-- Dodaj miejsce na wyświetlanie wyników generowania Proof of Space -->
-    </div>
+  <h2>Proof of Space Generator for {{ user.name }}</h2>
+  <button (click)="generateProofOfSpace(user)">Generate Proof of Space</button>
+  <div class="result-container" *ngIf="proofOfSpaceResults[user.id]">
+    <p
+      class="reward-info"
+      [ngClass]="{
+        'reward-success': proofOfSpaceResults[user.id].success,
+        'reward-failure': !proofOfSpaceResults[user.id].success
+      }"
+    >
+      Reward Status:
+      {{
+        proofOfSpaceResults[user.id].spaceProof
+          ? "Reward Obtained"
+          : "Reward Not Obtained"
+      }}
+    </p>
+    <!-- Dodaj miejsce na wyświetlanie wyników generowania Proof of Space -->
   </div>
+  <!-- Wyświetl notkę, jeśli oczekujemy na dowód -->
+  <div
+    *ngIf="awaitingProofOfSpace[user.id]"
+    [ngStyle]="{
+      'border-color': awaitingProofOfSpace[user.id]
+        ? 'yellow'
+        : proofOfSpaceResults[user.id]?.spaceProof
+        ? 'green'
+        : 'initial'
+    }"
+  >
+    <p>Waiting for Proof of Space...</p>
+  </div>
+</div>
