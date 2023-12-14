@@ -28,13 +28,15 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   constructor(private proofOfSpaceService: ProofOfSpaceService) { }
 
   ngOnInit(): void {
+    // Po załadowaniu komponentu, sprawdź aktualny stan nagród dla każdego użytkownika
+    this.refreshProofOfSpaceResults();
   }
 
   generateProofOfSpace(user: any) {
     this.proofOfSpaceSubscription = this.proofOfSpaceService.generateProofOfSpace(user.id, user.spaceSize, user.timeSpent).subscribe({
       next: (result) => {
-        this.proofOfSpaceResults[user.id] = result;
-        user.rewardReceived = result.success; // Ustaw pole rewardReceived w zależności od statusu nagrody
+        this.proofOfSpaceResults[user.id] = result.data;
+        // Dodaj kod do obsługi wyników, np. aktualizacja interfejsu użytkownika
       },
       error: (error) => {
         console.error('Error generating Proof of Space:', error);
@@ -44,6 +46,23 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    // W przypadku komponentu, zawsze pamiętaj o odsubskrybowaniu, aby uniknąć wycieków pamięci
     this.proofOfSpaceSubscription.unsubscribe();
+  }
+
+  refreshProofOfSpaceResults() {
+    // Przeszukaj wszystkich użytkowników i sprawdź ich aktualny stan nagród
+    for (const user of this.users) {
+      this.proofOfSpaceService.getProofOfSpaceResult(user.id).subscribe({
+        next: (result) => {
+          this.proofOfSpaceResults[user.id] = result.data;
+          // Dodaj kod do obsługi wyników, np. aktualizacja interfejsu użytkownika
+        },
+        error: (error) => {
+          console.error(`Error getting Proof of Space result for user ${user.id}:`, error);
+          // Dodaj kod do obsługi błędów, np. wyświetlanie komunikatu użytkownikowi
+        }
+      });
+    }
   }
 }

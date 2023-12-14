@@ -16,4 +16,9 @@ export class ProofOfSpaceService {
 
     return this.http.post(url, requestBody);
   }
+
+  getProofOfSpaceResult(userId: string): Observable<any> {
+    const url = `${this.backendUrl}/proof-of-space-result/${userId}`;
+    return this.http.get(url);
+  }
 }

@@ -1,4 +1,7 @@
+/* Dodaj te style do swojego pliku CSS lub SCSS */
 div {
+    display: flex;
+    flex-direction: column;
     margin: 20px;
     padding: 20px;
     border: 1px solid #ddd;
@@ -9,6 +12,7 @@ div {
   
   h2 {
     color: #333;
+    margin-bottom: 10px; /* Nowy styl */
   }
   
   button {
@@ -20,6 +24,7 @@ div {
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* Nowy styl */
   }
   
   button:hover {
@@ -27,12 +32,17 @@ div {
   }
   
   .result-container {
-    margin-top: 20px;
+    display: flex;
+    flex-direction: row; /* Zmieniono kierunek flexbox na wiersz */
+    align-items: center;
   }
   
   .reward-info {
-    font-size: 18px;
-    margin-top: 10px;
-    color: #333;
+    margin-left: 10px; /* Nowy styl */
+  }
+  
+  /* Nowy styl dodany, aby oddzielić kolumny */
+  div:not(:last-child) {
+    margin-right: 20px;
   }
   
