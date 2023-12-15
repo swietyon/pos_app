@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 
 const spaceProofs = {};
 const timeProofs = {};
-const userActivity = {}; // Dodano obiekt śledzący aktywność użytkowników
+const userActivity = {};
 
 app.post("/generate-proof", async (req, res) => {
   const { userId, spaceSize, timeInterval } = req.body;
@@ -31,21 +31,18 @@ app.post("/generate-proof", async (req, res) => {
     spaceProofs[userId] = { space, spaceProof };
     timeProofs[userId] = { time, timeProof };
 
-    // Zapisz aktywność użytkownika
     if (!userActivity[userId]) {
       userActivity[userId] = 1;
     } else {
       userActivity[userId]++;
     }
 
-    // Odpowiedz z wygenerowanymi dowodami i statusem aktywności
     res.json({
       success: true,
       message: "Proof of Space and Time generated successfully",
       data: { spaceProof, timeProof, userActivity: userActivity[userId] },
     });
   } else {
-    // Jeśli użytkownik już ma zarezerwowane miejsce i czas, niech ich użyje ponownie
     res.json({
       success: true,
       message: "Proof of Space and Time already generated",
@@ -61,7 +58,6 @@ app.post("/generate-proof", async (req, res) => {
 app.get("/proof-of-space-result/:userId", (req, res) => {
   const userId = req.params.userId;
 
-  // Sprawdź stan nagrody dla danego użytkownika
   const spaceProof = spaceProofs[userId];
   const timeProof = timeProofs[userId];
 

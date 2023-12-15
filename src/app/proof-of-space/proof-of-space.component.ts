@@ -12,8 +12,6 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   proofOfSpaceSubscription!: Subscription;
   awaitingProofOfSpace: { [userId: string]: boolean } = {};
 
-
-  // Przykładowe dane użytkowników
   users = [
     { id: '1', name: 'Maks', spaceSize: 300, timeSpent: 300, rewardReceived: false },
     { id: '2', name: 'Hubert', spaceSize: 500, timeSpent: 1000, rewardReceived: false },
@@ -30,44 +28,35 @@ export class ProofOfSpaceComponent implements OnInit, OnDestroy {
   constructor(private proofOfSpaceService: ProofOfSpaceService) { }
 
   ngOnInit(): void {
-    // Po załadowaniu komponentu, sprawdź aktualny stan nagród dla każdego użytkownika
     this.refreshProofOfSpaceResults();
   }
 
   generateProofOfSpace(user: any) {
-    // Oznacz, że oczekujemy na dane dla danego użytkownika
     this.awaitingProofOfSpace[user.id] = true;
   
     this.proofOfSpaceSubscription = this.proofOfSpaceService.generateProofOfSpace(user.id, user.spaceSize, user.timeSpent).subscribe({
       next: (result) => {
         this.proofOfSpaceResults[user.id] = result.data;
-        // Dodaj kod do obsługi wyników, np. aktualizacja interfejsu użytkownika
       },
       error: (error) => {
         console.error('Error generating Proof of Space:', error);
-        // Zaktualizuj informację o oczekiwaniu w przypadku błędu po 0.5 sekundy
-        // Dodaj kod do obsługi błędów, np. wyświetlanie komunikatu użytkownikowi
       }
     });
 
   }
   
   ngOnDestroy() {
-    // W przypadku komponentu, zawsze pamiętaj o odsubskrybowaniu, aby uniknąć wycieków pamięci
     this.proofOfSpaceSubscription.unsubscribe();
   }
 
   refreshProofOfSpaceResults() {
-    // Przeszukaj wszystkich użytkowników i sprawdź ich aktualny stan nagród
     for (const user of this.users) {
       this.proofOfSpaceService.getProofOfSpaceResult(user.id).subscribe({
         next: (result) => {
           this.proofOfSpaceResults[user.id] = result.data;
-          // Dodaj kod do obsługi wyników, np. aktualizacja interfejsu użytkownika
         },
         error: (error) => {
           console.error(`Error getting Proof of Space result for user ${user.id}:`, error);
-          // Dodaj kod do obsługi błędów, np. wyświetlanie komunikatu użytkownikowi
         }
       });
     }
